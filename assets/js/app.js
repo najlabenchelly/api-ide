@@ -10,21 +10,30 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/Homepage";
+import { HashRouter, Switch, Route } from "react-router-dom";
+import ProjectPage from "./pages/ProjectPage";
+
+
+// importation du css
 require("../css/app.css");
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
 console.log("Hello !!!");
-
+//localhost:8000/#/
 const App = () => {
   return (
-    <>
+    <HashRouter>
       <Navbar />
-      <div className='container pt-5'>
-        <HomePage />
-      </div>
-    </>
+          <main className='container pt-5'>
+              <Switch>
+                <Route path="/project" component={ProjectPage}/>    
+                <Route path="/" component={HomePage}/>
+            </Switch>
+    
+      </main>
+    </HashRouter>
   );
 };
 const rootElement = document.querySelector("#app");
