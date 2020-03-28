@@ -8,6 +8,8 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import React from "react";
 import ReactDOM from "react-dom";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/Homepage";
 require("../css/app.css");
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
@@ -16,7 +18,14 @@ require("../css/app.css");
 console.log("Hello !!!");
 
 const App = () => {
-  return <h1>Coucou tout le monde </h1>;
+  return (
+    <>
+      <Navbar />
+      <div className='container pt-5'>
+        <HomePage />
+      </div>
+    </>
+  );
 };
 const rootElement = document.querySelector("#app");
 ReactDOM.render(<App />, rootElement);
