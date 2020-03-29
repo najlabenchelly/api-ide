@@ -51,7 +51,7 @@ security:
     #- { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
     - {
         path: ^/api/projects,
-        roles: IS_AUTHENTICATED_FULLY,
+        roles: IS_AUTHENTICATED_ANONYMOUSLY,
         methods: [GET, PUT, DELETE],
       }
     # - { path: ^/profile, roles: ROLE_USER }
