@@ -6,19 +6,27 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- *  @ApiResource(
- * attributes={
- * "pagination_enabled"=true,
- * "order":{"lastName":"asc"}
+ * @ApiResource(
+ * collectionOperations={"GET", "POST"},
+ * itemOperations={"GET","PUT","DELETE"},
+ * subresourceOperations={
+ * "projects_get_subresource"={"path"="/utilisateurs/{id}/projets"}
+ * },
+ * normalizationContext={
+ * "groups"={"user_read"}
  * }
- * ),
+ * )
+ * 
  * @ApiFilter(SearchFilter::class, properties={"lastName":"partial"}),
  * @ApiFilter(OrderFilter::class),
  * 
@@ -29,37 +37,52 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user_read"})
+     *  @Assert\NotBlank(message="l'email est obligatoire")
+     *  @Assert\Email(message="Le format de l'email doit être valide : xxxx@xxx.com")
+     *
+     * 
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"user_read"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     *  @Assert\NotBlank
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user_read"})
+     * @Assert\NotBlank(message="le prénom est obligatoire")
+     *  @Assert\Length(min=4,minMessage="Le prénom doit contenir plus de 4 lettres" ,max=100)
+     * 
      */
     private $firstName;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Project", mappedBy="user")
+     * @ApiSubresource
      */
     private $projects;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user_read"})
+     *  @Assert\NotBlank
      */
     private $lastName;
 
